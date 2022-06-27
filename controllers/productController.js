@@ -2,9 +2,7 @@ import asyncHandler from 'express-async-handler'
 import { protect } from '../middleware/authMiddleward.js'
 import Product from '../models/productModel.js'
 
-//@desc    Fetch All Products
-//@route   GET /api/products
-//@access  Public
+
 const getProducts = asyncHandler(async (req, resp) => {
     const pageSize = 8
     const page = Number(req.query.pageNumber) || 1
@@ -18,9 +16,7 @@ const getProducts = asyncHandler(async (req, resp) => {
     const products = await Product.find({ ...keyword }).limit(pageSize).skip(pageSize * (page - 1))
     resp.json({ products, page, pages: Math.ceil(count / pageSize) })
 })
-//@desc    Fetch Single Products
-//@route   GET /api/products/:id
-//@access  Public
+
 
 const getProductById = asyncHandler(async (req, resp) => {
     const id = req.params.id
@@ -32,9 +28,7 @@ const getProductById = asyncHandler(async (req, resp) => {
         throw new Error('Product not found')
     }
 })
-//@desc    delete Single Products
-//@route   delete /api/products/:id
-//@access  Private/Admin
+
 const deleteProduct = asyncHandler(async (req, resp) => {
     const id = req.params.id
     const product = await Product.findById(id)
@@ -49,9 +43,7 @@ const deleteProduct = asyncHandler(async (req, resp) => {
     }
 })
 
-//@desc    create Single Products
-//@route   post /api/products/
-//@access  Private/Admin
+
 const createProduct = asyncHandler(async (req, resp) => {
 
     console.log(req.user);
@@ -72,9 +64,7 @@ const createProduct = asyncHandler(async (req, resp) => {
     resp.status(201).json(createdProduct)
 })
 
-//@desc    Update Single Products
-//@route   put /api/products/:id
-//@access  Private/Admin
+
 const updateProduct = asyncHandler(async (req, resp) => {
 
     const { rating, name, price, description, image, brand, countInStock, numReviews, category } = req.body
@@ -99,9 +89,6 @@ const updateProduct = asyncHandler(async (req, resp) => {
 })
 
 
-//@desc    create new review
-//@route   POST /api/products/:id/reviews
-//@access  Private
 const createProductReview = asyncHandler(async (req, resp) => {
     const { rating, comment } = req.body
     const product = await Product.findById(req.params.id)
@@ -136,9 +123,6 @@ const createProductReview = asyncHandler(async (req, resp) => {
 })
 
 
-//@desc    get top rated products
-//@route   POST /api/products/top
-//@access  Public
 const getTopProducts = asyncHandler(async (req, resp) => {
     const products = await Product.find({}).sort({ rating: -1 }).limit(4)
 
