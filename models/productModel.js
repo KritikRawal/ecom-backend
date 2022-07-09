@@ -1,18 +1,73 @@
-const mongoose = require('mongoose');
-const Product = mongoose.model('Product',{
-    pname : {type :String},
-    pprice : {type :Number},
-    pdesc : {type :String},
-    pimage : {type: String,default:"no-img.jpg"},
-    availableStock:{"type":Number,"required":true},
-    sold:{"type":Number,"required":true},
-    productCode:{"type":String,"required":true},
-    pBrand:{"type":String,"required":true},
-    discount:{"type":Number,"required":true},
-    newPrice:{"type":Number,"required":true},
-    discountedAmount:{"type":Number,"required":true},
-    onSale:{"type":Boolean,"required":true},
-    category:{"type":String,"required":true}
+import mongoose from 'mongoose'
+
+const reviewSchema = mongoose.Schema({
+    name: {
+        type: String, required: true
+    },
+    rating: {
+        type: Number, required: true
+    },
+    comment: {
+        type: String, required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
+}, {
+    timestamps: true
 })
 
-module.exports = Product;
+const productSchema = mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    },
+    brand: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    reviews: [
+        reviewSchema
+    ],
+    rating: {
+        type: Number,
+        default: 0
+    },
+    category: {
+        type: String,
+    },
+    numReviews: {
+        type: Number,
+        default: 0
+    },
+    price: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    countInStock: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+}, {
+    timestamps: true
+})
+
+const Product = mongoose.model('Product', productSchema)
+export default Product
